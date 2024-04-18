@@ -30,8 +30,7 @@ fs.access(podfilePath, fs.constants.F_OK, (err) => {
             return;
         }
         // Insertar la línea a añadir justo después
-        lines.splice(index + 1, 0, lineToAddHeaders);
-	lines.splice(index + 2, 0, lineToAddFrameworks);
+        lines.splice(index + 1, 0, lineToAddHeaders, lineToAddFrameworks);
         const newData = lines.join('\n')
         fs.writeFile(podfilePath, newData, 'utf8', (err) => {
             if (err) {
