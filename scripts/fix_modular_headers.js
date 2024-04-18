@@ -11,7 +11,8 @@
 const fs = require('fs');
 console.log("FIX use_modular_headers! - Ejecutando el script desde: " + process.cwd());
 const podfilePath = 'platforms/ios/Podfile';
-const lineToAdd = "use_modular_headers!";
+const lineToAddHeaders = "use_modular_headers!";
+const lineToAddFrameworks = "use_frameworks!";
 fs.access(podfilePath, fs.constants.F_OK, (err) => {
     if (err) {
         console.error(`El archivo ${podfilePath} no existe o no se puede acceder.`);
@@ -22,9 +23,6 @@ fs.access(podfilePath, fs.constants.F_OK, (err) => {
             console.error(err);
             return;
         }
-        if (data.includes(lineToAdd)) {
-            return;
-        }
         const lines = data.split('\n');
         let index = lines.findIndex(line => line.includes("platform"));
         if (index === -1) {
@@ -32,14 +30,15 @@ fs.access(podfilePath, fs.constants.F_OK, (err) => {
             return;
         }
         // Insertar la línea a añadir justo después
-        lines.splice(index + 1, 0, lineToAdd).join('\n');
+        lines.splice(index + 1, 0, lineToAddHeaders);
+	lines.splice(index + 2, 0, lineToAddFrameworks);
         const newData = lines.join('\n')
         fs.writeFile(podfilePath, newData, 'utf8', (err) => {
             if (err) {
                 console.error(err);
                 return;
             }
-            console.log(`FIX use_modular_headers! - Se ha añadido la línea '${lineToAdd}' al Podfile correctamente.`);
+            console.log(`FIX use_modular_headers! - Se ha añadido la línea '${lineToAddHeaders}' y '${lineToAddFrameworks}' al Podfile correctamente.`);
         });
     });
 });
